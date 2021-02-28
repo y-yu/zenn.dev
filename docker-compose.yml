@@ -1,0 +1,13 @@
+version: '3.2'
+services:
+  zenn-preview:
+    image: yyupw/zenn:latest
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      cache_from:
+        - yyupw/zenn:latest
+    volumes:
+      - .:/workdir
+    entrypoint: ./docker/wget.sh
+

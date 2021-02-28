@@ -1,0 +1,41 @@
+name: CI
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Build
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1 
+      with:
+        username: yyupw
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Get Docker image
+      run: docker-compose pull
+
+    - name: Build Docker image
+      run: docker-compose build
+
+    - name: Generate HTML
+      run: docker-compose up --abort-on-container-exit
+      
+    - name: Push Docker image if it is needed
+      run: docker-compose push
+      if: ${{ github.ref == 'refs/heads/master' }}
+
+    - name: Deploy to gh-pages
+      uses: JamesIves/github-pages-deploy-action@4.0.0
+      with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: targets
+          TARGET_FOLDER: ./
+          CLEAN: true
+      if: ${{ github.ref == 'refs/heads/master' }}
