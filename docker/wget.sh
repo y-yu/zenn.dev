@@ -2,7 +2,6 @@
 
 set -x
 
-npx zenn preview &
 sleep 2
 
 if [ -d "./targets" ]; then

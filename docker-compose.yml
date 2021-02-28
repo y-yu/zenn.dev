@@ -9,5 +9,6 @@ services:
         - yyupw/zenn:latest
     volumes:
       - .:/workdir
-    entrypoint: ./docker/wget.sh
-
+    entrypoint: npx zenn preview
+    ports:
+      - 8000:8000

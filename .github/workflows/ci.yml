@@ -23,8 +23,11 @@ jobs:
     - name: Build Docker image
       run: docker-compose build
 
+    - name: Run preview server
+      run: docker-compose up -d
+
     - name: Generate HTML
-      run: docker-compose up --abort-on-container-exit
+      run: ./docker/wget.sh
       
     - name: Push Docker image if it is needed
       run: docker-compose push
