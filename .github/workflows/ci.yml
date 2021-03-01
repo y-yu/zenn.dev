@@ -27,10 +27,14 @@ jobs:
       run: docker-compose up -d
 
     - name: Generate HTML
-      run: ./docker/wget.sh
+      run: ./.github/workflows/wget.sh
       
     - name: Push Docker image if it is needed
       run: docker-compose push
+      if: ${{ github.ref == 'refs/heads/master' }}
+
+    - name: Create .nojekyll file
+      run: touch ./targets/.nojekyll
       if: ${{ github.ref == 'refs/heads/master' }}
 
     - name: Deploy to gh-pages
