@@ -35,7 +35,6 @@ jobs:
 
     - name: Create .nojekyll file
       run: touch ./targets/.nojekyll
-      if: ${{ github.ref == 'refs/heads/master' }}
 
     - name: Deploy to gh-pages
       uses: JamesIves/github-pages-deploy-action@4.0.0
@@ -45,4 +44,4 @@ jobs:
           FOLDER: targets
           TARGET_FOLDER: ./
           CLEAN: true
-      if: ${{ github.ref == 'refs/heads/master' }}
+
