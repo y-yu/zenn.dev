@@ -2,7 +2,7 @@
 title: "Scala + Play on HerokuなWebアプリにNew Relicを導入"
 emoji: "📈"
 type: "tech"
-topics: ["scala", "playframework", "newrelic"]
+topics: ["scala", "playframework", "newrelic", "heroku"]
 published: true
 ---
 
