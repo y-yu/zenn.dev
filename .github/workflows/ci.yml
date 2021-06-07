@@ -20,7 +20,7 @@ jobs:
     - name: Install zenn-cli
       run: |
         npm init --yes
-        npm install zenn-cli@latest
+        npm install zenn-cli@canary
         npx zenn init
 
     - name: Run preview server
@@ -40,5 +40,5 @@ jobs:
           BRANCH: gh-pages
           FOLDER: targets
           TARGET_FOLDER: ./
-          CLEAN: false
+          CLEAN: true
 

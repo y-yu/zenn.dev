@@ -40,8 +40,4 @@ cd ./targets
 find . -name "*.html" -or -name "*.css" -or -name "*.js" |\
     xargs perl -i -pe 's/(?<!\.)\/(_next)/..\/$1/g'
 
-# Update KaTeX version
-find . -name "*.css" -or -name "*.js" |\
-    xargs perl -i -pe 's/0\.12\.0/0.13.11/g'
-
 exit 0
