@@ -3,7 +3,7 @@ title: "Rustで型レベルプログラミング"
 emoji: "🆎"
 type: "tech"
 topics: ["rust", "関数型プログラミング"]
-published: false
+published: true
 ---
 
 # はじめに
