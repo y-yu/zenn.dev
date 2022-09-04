@@ -371,9 +371,9 @@ fn 型レベルの等価の結果が正しい() {
 }
 ```
 
-# 型レベルリスト`HList`
+# 型レベルリスト
 
-`TSucc<N: TNat>`のような再帰的な型を作ることで、自然数のような元の数が限定されないような構造も型レベルで表現できることが分かった。この`TSucc`では型パラメーターとして取る型`N`が`TNat`に限定されていたが、これとは別に任意の型も受け取れるようにしてみようというのが次のような`HList`[^not_default]である。
+`TSucc<N: TNat>`のような再帰的な型を作ることで、自然数のような元の数が限定されないような構造も型レベルで表現できることが分かった。この`TSucc`では型パラメーターとして取る型`N`が`TNat`に限定されていたが、これとは別に任意の型も受け取れるようにしてみようというのが次のような`HList`[^hlist][^not_default]である。
 
 ```rust
 pub trait HList { }
@@ -386,6 +386,8 @@ pub struct HCons<H, L: HList>(H, L);
 impl HList for HNil { }
 impl<H, L: HList> HList for HCons<H, L> { }
 ```
+
+[^hlist]: `HList`とは _Heterogeneous List_ のことである。
 
 [^not_default]: `HCons`が任意の型を取る関係で`HCons: Default`とすることは難しいため`HList`からも`Default`を外した。
 
