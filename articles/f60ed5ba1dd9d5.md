@@ -97,7 +97,7 @@ pub trait Applicative {
 ![](https://storage.googleapis.com/zenn-user-upload/7e893de2ca28-20221106.png)
 *`Monad`と`Applicative`の`f`（コールバック）への引数の関係*
 
-このように`Monad`の`flat_map`は`self`の値をコールバックである`f`に渡しているのに対して、`Applicative`の`map2`は別の`This<B>`を引っ張ってきてそれと`self`の値を一気に`f`で処理している。つまり`Monad`の`flat_map`には「`A`の値が得られば`f`を実行する」という逐次的な性質があり、一方で`Applicative`の`map2`は「`self`と`mb`をどういう順で処理してもいいが、2つが得られ次第`f`を実行する」という順不同な性質を表現していると考えられる。
+このように`Monad`の`flat_map`は`self`の値をコールバックである`f`に渡しているのに対して、`Applicative`の`map2`は別の`This<B>`を引っ張ってきてそれと`self`の値を一気に`f`で処理している。このとき`mb: This<B>`の構築に型`A`の値は一切関与しないことが重要である。つまり`Monad`の`flat_map`には「`A`の値が得られば`f`を実行する」という逐次的な性質があり、一方で`Applicative`の`map2`は「`self`と`mb`を独立した順で処理して、この2つが得られ次第`f`を実行する」という順不同な性質を表現していると考えられる。
 さて、どうしてあえて`Applicative`を出してきたかというと、`Monad`は順が固定されているのに対して、`Applicative`は順がない（= 適当な順でやってもいい）ので、`Monad`なものは常に`Applicative`と言えそうである。したがって`impl<M: Monad> Applicative for M`の定義を目指す。
 
 ```rust:monad.rs
