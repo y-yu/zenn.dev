@@ -24,7 +24,7 @@ impl<A> Monad for Option<A> {
 }
 ```
 
-この記事では実際に上記の`Monad`のようなトレイトを実際の`Option`などに適用してどの程度うまくいくのかを伸べる。なお、この記事を読むにあたってモナドや関数型言語などの知識はほぼ必要なく、HaskellやScalaなど他の言語にあるものとしてモナドを選んだだけでである。
+この記事では実際に上記の`Monad`のようなトレイトを実際の`Option`などに適用してどの程度うまくいくのかを伸べる。なお、この記事を読むにあたってモナドや関数型言語などの知識はほぼ必要なく、HaskellやScalaなど他の言語にあるものとしてモナドを選んだだけである。
 この記事に記載されている完全なソースコードは下記のGitHubリポジトリーから入手できる。
 
 - https://github.com/y-yu/rust-gats-monad
@@ -86,7 +86,7 @@ pub trait Applicative {
 
     fn pure_a<B>(t: B) -> Self::This<B>;
 
-    fn map2<F, B, C>(self, mb: Self::This<B>, f: F) -> Self::This<C>
+    fn map2<B, C, F>(self, mb: Self::This<B>, f: F) -> Self::This<C>
     where
         F: FnMut(Self::A, B) -> C;
 }
@@ -109,7 +109,7 @@ impl<M: Monad> Applicative for M {
         <M as Monad>::pure_m(t)
     }
 
-    fn map2<F, B, C>(self, mb: Self::This<B>, f: F) -> Self::This<C>
+    fn map2<B, C, F>(self, mb: Self::This<B>, f: F) -> Self::This<C>
     where
         F: FnMut(Self::A, B) -> C
     {
@@ -139,7 +139,30 @@ impl<M: Monad> Applicative for M {
               found associated type `<<M as Monad>::This<B> as Monad>::This<_>`
 ```
 
-どうしてこのようなエラーが出てしまうかというと、実はこのトレイト`Monad`の定義には穴があり、次のような変な`impl`を作ることができてしまう。
+ようするに`flat_map`したあとの型が`self`の型と一致しているかが定かではないためこのようにコンパイルエラーとなってしまってうまくいかない。
+今`mb.flat_map`の返り値の型は`mb: <M as Monad>::This<B>`の`flat_map`なので`<<M as Monad>::This<B> as Monad>::This<C>`を求めることになる。ところが`M::pure_m(f(a, b))`の型は`<M as Monad>::This<C>`であるため型エラーとなってしまっている。
+
+```rust
+mb.flat_map(|b: B| -> <<M as Monad>::This<B> as Monad>::This<C> {
+    M::pure_m(f(a, b)) // -> <M :: Monad>::This<C>
+})
+```
+
+複雑なassociated typeが多くなってきたので、下記の表で整理する。
+
+| 型                                          | 意味                                                      | 
+| ------------------------------------------- | --------------------------------------------------------- | 
+| `<M as Monad>::This<B>`                     | `mb`の型                                                  | 
+| `<M as Monad>::This<C>`                     | `self.flat_map<C, _>`の返り値、または`M::pure_m<C>`の返り値 | 
+| `<<M as Monad>::This<B> as Monad>::This<C>` | `mb.flat_map<C, _>`の返り値                               | 
+
+そして、`M: Monad`が`Applicative`を`impl`するためには任意の型`B`,`C`において下の型の等価が必要とされている。
+
+```rust
+<<M as Monad>::This<B> as Monad>::This<C> == <M :: Monad>::This<C>
+```
+
+しかし実はこの`Monad`トレイトは下記のような穴があり、次のような変な`impl`を作ることができてしまう。
 
 ```rust
 impl<A> Monad<A> for Option<A> {
@@ -148,7 +171,7 @@ impl<A> Monad<A> for Option<A> {
 }
 ```
 
-ようするに`flat_map`したあとの型が`self`の型と一致しているかが定かではないためこのようにコンパイルエラーとなってしまってうまくいかない。
+したがって少なくとも`Monad`トレイト制約では`flat_map`後の`This`が同一かどうかを確定させられないため、Rustコンパイラーはこのような`Monad`から`Applictaive`導出を許可してくれない。
 
 # 余談
 
