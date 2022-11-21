@@ -6,7 +6,7 @@ topics: ["render", "scala", "playframework", "docker"]
 published: true
 ---
 
-#　はじめに
+# はじめに
 
 Herokuの無料プランが2022年11月28日で終了する。Herokuの代替サービスとして[Render](https://render.com)がいくつかの記事で紹介された。しかし今のところRenderでScala + Play製のWebアプリケーションを動作させたという記事が（英語含めて）あまり見当たらないため、筆者の運用しているScala + Playなアプリケーションである[Kindle時計サーバー](https://github.com/y-yu/kindle-clock)を例に紹介する。
 
