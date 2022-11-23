@@ -110,6 +110,29 @@ services:
 
 あとはここから先ほど作成したGitHubリポジトリーを選択すればOKとなる。あとは`git push`するたびに自動でデプロイなどが実行される。
 
+# 自動デプロイ
+
+RenderにはデプロイをKickするためのURLが用意されているので、これをGitHub Actionsで叩けばよい。
+
+![](https://storage.googleapis.com/zenn-user-upload/79cbd180ab81-20221123.png)
+
+このURLをGitHubのシークレットにたとえば`RENDER_DEPLOY_URL`などと登録しておき、下記のようなGitHub Actionsを登録すればOKとなる。
+
+```yaml:.github/workflows/deploy_render.yaml
+name: Deploy to Render
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Render
+        run: curl -sSfL ${{ secrets.RENDER_DEPLOY_URL }}
+```
+
 # まとめ
 
 Scala + Play製のアプリケーションをRenderで動かす方法について解説した。Herokuの無料プランが終わってしまって引っ越し先を検討している方の参考になればいいと思う。
