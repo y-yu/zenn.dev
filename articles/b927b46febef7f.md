@@ -69,7 +69,7 @@ services:
     numInstances: 1
     envVars:
       - key: JAVA_OPTS
-        value: -Xmx400m -XX:+UseSerialGC
+        value: -Xmx400m -XX:+UseSerialGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps
       - key: OPEN_WEATHER_MAP_APP_ID
         value: *********
       - key: OPEN_WEATHER_MAP_ID
