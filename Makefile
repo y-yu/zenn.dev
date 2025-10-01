@@ -1,4 +1,4 @@
 .PHONY: new
 
 new:
-	docker-compose run --entrypoint "npx zenn new:article" zenn-preview
+	docker compose run zenn-cli new:article
